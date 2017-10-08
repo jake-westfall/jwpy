@@ -38,32 +38,43 @@ def shrink(values, a, b):
     return (a + ones)/(a + b + zeros + ones)
 
 
-def aov_xtab(endog, index, columns, figsize=(13, 8)):
+def aov_xtab(values, index, columns, figsize=(13, 8)):
 	'''
 	Exploratory plot for pairs of categorical predictors/features.
 	Args:
-		endog:
+		values:
 		index:
 		columns:
 		figsize:
 	'''
 
+	# group the variables into a DataFrame
 	dat = pd.DataFrame({
-	    'k': train.groupby(['source_screen_name','source_type'])['target'].sum(),
-	    'n': train.groupby(['source_screen_name','source_type'])['target'].count()
-	})
-	a, b = betabinom(endog=dat).fit().params
+		'values': values,
+		'index': index,
+		'columns': columns
+		})
+
+	# fit the beta-binomial model
+	endog = pd.DataFrame({
+	    'k': dat.groupby(['index','columns'])['values'].sum(),
+	    'n': dat.groupby(['index','columns'])['values'].count()
+		})
+	a, b = betabinom(endog=endog).fit().params
+	m = a/(a+b)
 
 	# compute the shrunken cell means and sort the matrix by row/column means
-	shrunk = pd.pivot_table(train, values='target', index='source_screen_name',
-	                        columns='source_type', aggfunc=shrink, fill_value=a/(a+b))
+	shrunk = pd.pivot_table(dat, values='values', index='index',
+	                        columns='columns', aggfunc=shrink, fill_value=m)
 	new_index = shrunk.index[shrunk.mean(1).argsort()[::-1]]
 	new_columns = shrunk.columns[shrunk.mean(0).argsort()[::-1]]
-	shrunk = shrunk.reindex_axis(new_index, axis=0).reindex_axis(new_columns, axis=1)
+	shrunk = shrunk.reindex_axis(new_index, axis=0)
+	shrunk = shrunk.reindex_axis(new_columns, axis=1)
 
 	# compute the numbers of obs. per cell and sort by the same means as above
-	annot = pd.crosstab(train['source_screen_name'], train['source_type'])
-	annot = annot.reindex_axis(new_index, axis=0).reindex_axis(new_columns, axis=1)
+	annot = pd.crosstab(dat['index'], dat['columns'])
+	annot = annot.reindex_axis(new_index, axis=0)
+	annot = annot.reindex_axis(new_columns, axis=1)
 
 	# print stuff
 	print('SD of row means: {}'.format(shrunk.mean(1).std()))
