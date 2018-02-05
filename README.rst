@@ -1,5 +1,5 @@
 ====
-jwpy
+# jwpy
 ====
 
 
@@ -28,21 +28,21 @@ Contains miscellaneous Python code useful to Jake Westfall (and maybe others).
 Functions
 --------
 
-* `summarize_df()`: Quick summary of most important DataFrame info
-* `Timer`: Class for printing the execution time of expressions (use with `with` statement)
-* `header`: Constant for filling in top of new Python scripts
-* `aov_xtab()`: Exploratory function for examining crossing of two many-leveled factors
-* `betabinom`: Class implementing likelihood function for beta-binomial model; can be plugged into `statsmodels`
+* ``summarize_df()``: Quick summary of most important DataFrame info
+* ``Timer``: Class for printing the execution time of expressions (use with ``with`` statement)
+* ``header``: Constant for filling in top of new Python scripts
+* ``aov_xtab()``: Exploratory function for examining crossing of two many-leveled factors
+* ``betabinom``: Class implementing likelihood function for beta-binomial model; can be plugged into ``statsmodels``
 
 Installation
 ------------
 
-`pip install git+https://github.com/jake-westfall/jwpy.git`
+``pip install git+https://github.com/jake-westfall/jwpy.git``
 
 Credits
 ---------
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+This package was created with Cookiecutter_ and the ``audreyr/cookiecutter-pypackage``_ project template.
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+.. _``audreyr/cookiecutter-pypackage``: https://github.com/audreyr/cookiecutter-pypackage
