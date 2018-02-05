@@ -1,9 +1,5 @@
-import numpy as np
 import pandas as pd
-import os
 import re
-from jwpy.explore_funcs import summarize_df
-import pyhcup
 
 
 def read_hcup(data_file, sas_script, chunksize=500000, combine_chunks=True,
