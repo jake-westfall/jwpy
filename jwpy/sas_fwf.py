@@ -5,11 +5,6 @@ import re
 from jwpy.explore_funcs import summarize_df
 import pyhcup
 
-sas_path = '/Users/jake/Desktop/Google Drive/jwpy/jwpy/'
-
-os.getcwd()
-# os.chdir(os.path.dirname(sas_path))
-
 
 def read_hcup(data_file, sas_script, chunksize=500000, combine_chunks=True,
               return_meta=False):
@@ -79,12 +74,3 @@ def read_hcup(data_file, sas_script, chunksize=500000, combine_chunks=True,
     # recombine the chunks and return the result
     dat = pd.concat(dat)
     return dat
-
-
-files = ['NIS_2015_Core', 'NIS_2015_Hospital', 'NIS_2015Q1Q3_DX_PR_GRPS',
-         'NIS_2015Q4_DX_PR_GRPS', 'NIS_2015Q1Q3_Severity',
-         'NIS_2015Q4_Severity']
-datasets = [read_hcup(data_file='./fwf_test/'+f+'.fwf',
-                      sas_script='./fwf_test/SASLoad_'+f+'.SAS',
-                      chunksize=10) for f in files]
-summarize_df(datasets[4])
