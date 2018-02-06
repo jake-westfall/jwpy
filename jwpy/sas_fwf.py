@@ -4,17 +4,20 @@ import re
 
 
 def read_hcup(data_file, sas_script, chunksize=500000, combine_chunks=True,
-              return_meta=False):
+              return_meta=False, strings_to_categorical=True, nrows=None):
     '''
     Arguments:
         data_file (str): Path of fixed-width text data file
         sas_script (str): Path of the accompanying SAS load file
-        chunksize (int): Break data_file into chunks with nrows=chunksize and
-            read/process each chunk separately (for lower memory usage)
-        combine_chunks (bool): Return single DataFrame with all chunks combined
-            (True; default), or return list of DataFrame chunks (False)
-        return_meta (bool): Return the data + a DataFrame of column metadata
-            (True), or just return the processed data (False; default)
+        chunksize (int, default 500K): Break data into chunks of size chunksize
+            and read/process each chunk separately (for lower memory usage)
+        combine_chunks (bool, default True): Return single DataFrame with all
+            chunks combined (True), or return list of DataFrame chunks (False)
+        return_meta (bool, default False): Return the data + a DataFrame of
+            column metadata (True), or just return the processed data (False)
+        strings_to_categorical (bool, default True): Convert variables defined
+            as CHAR in SAS script to pd.Categorical upon import
+        nrows (int, default None): Read in only the top `nrow` rows of the data
 
     Returns:
         Default: a single pandas DataFrame
@@ -50,7 +53,8 @@ def read_hcup(data_file, sas_script, chunksize=500000, combine_chunks=True,
 
     # read the data from disk in bite-sized chunks
     dat = pd.read_fwf(data_file, header=None, names=names, widths=widths,
-                      dtype=dtype, na_values=na_vals, chunksize=chunksize)
+                      dtype=dtype, na_values=na_vals, chunksize=chunksize,
+                      nrows=nrows)
     # convert generator to list
     dat = list(dat)
 
