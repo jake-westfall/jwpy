@@ -30,9 +30,10 @@ Functions
 
 * ``summarize_df()``: Quick summary of most important DataFrame info
 * ``Timer``: Class for printing the execution time of expressions (use with ``with`` statement)
-* ``header``: Constant for filling in top of new Python scripts
+* ``header``: Constant (string) useful for filling in top of new Python scripts
 * ``aov_xtab()``: Exploratory function for examining crossing of two many-leveled factors
 * ``betabinom``: Class implementing likelihood function for beta-binomial model; can be plugged into ``statsmodels``
+* ``read_hcup()``: Reads in fixed-width text data files that are in the format used by HCUP
 
 Installation
 ------------
