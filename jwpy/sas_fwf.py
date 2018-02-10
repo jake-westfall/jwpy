@@ -36,7 +36,8 @@ def read_hcup(data_file, sas_script, chunksize=500000, combine_chunks=True,
     # from those, grab the names and starting positions, and infer the dtypes
     starts = [int(x[0]) for x in fields]
     names = [x[1] for x in fields]
-    dtype = ['category' if re.search(r'CHAR', x[2]) else float for x in fields]
+    dtype = ['category' if re.search(r'CHAR', x[2])
+             else 'float32' for x in fields]
     # must use floats, since int columns can't have missing values
     # because it's okay because floats hardly use more space than ints
 
