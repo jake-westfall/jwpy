@@ -57,11 +57,14 @@ class Timer:
 
 def align_cols(df1, df2):
     '''
-    Wrapper for pandas.DataFrame.align(..., axis=1) that better handles dtypes.
+    Wrapper for pandas.DataFrame.align(..., axis=1) to prepare dataframes for
+    being stacked with pandas.concat(). Makes categoricals have the same
+    categories so they won't be case to 'object' during stacking, and downcasts
+    float64 types to float32 where possible to save memory.
 
     Args:
         df1, df1: The two dataframes to align column-wise, fill in missing
-            values, etc.
+            columns/values, etc.
 
     Returns:
         A tuple containing (df1_aligned, df2_aligned).

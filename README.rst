@@ -34,6 +34,7 @@ Functions
 * ``aov_xtab()``: Exploratory function for examining crossing of two many-leveled factors
 * ``betabinom``: Class implementing likelihood function for beta-binomial model; can be plugged into ``statsmodels``
 * ``read_hcup()``: Reads in fixed-width text data files that are in the format used by HCUP
+* ``align_cols()``: Wrapper for pandas.DataFrame.align(..., axis=1) that prepares column dtypes for stacking
 
 Installation
 ------------
