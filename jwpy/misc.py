@@ -1,6 +1,7 @@
 import timeit
 import numpy as np
 import pandas as pd
+from operator import xor
 
 # convenience variable for filling in new python scripts
 header = '''import numpy as np
