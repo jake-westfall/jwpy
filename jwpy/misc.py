@@ -93,9 +93,5 @@ def align_cols(df1, df2):
                 _newlevels = list(levels[col] - set(d[col].cat.categories))
                 d[col] = d[col].cat.add_categories(_newlevels)
                 d[col] = d[col].cat.reorder_categories(levels[col])
-        # downcast float64 to float32
-        else:
-            for d in (p1, p2):
-                if str(d[col].dtype) == 'float64':
-                    d[col] = pd.to_numeric(d[col], downcast='float')
+
     return p1, p2
