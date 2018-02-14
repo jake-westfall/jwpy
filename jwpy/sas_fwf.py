@@ -25,6 +25,9 @@ def read_hcup(data_file, sas_script, chunksize=500000, combine_chunks=True,
         If return_meta=True: Return metadata (widths, dtypes, etc. ) *instead
             of* the data
     '''
+    # what dtype to use for text columns
+    text = 'category' if strings_to_categorical else 'object'
+
     # read in the sas script
     with open(sas_script) as f:
         sas = f.readlines()
@@ -39,13 +42,13 @@ def read_hcup(data_file, sas_script, chunksize=500000, combine_chunks=True,
 
     # use different dtypes based on whether user requests metadata or data.
     # in the latter case we just make everything a category for max compression
+    # for numerics, must use floats since int columns can't have missing values
+    # but it's okay because floats hardly use more space than ints
     if return_meta:
-        dtype = ['category' if re.search(r'CHAR', x[2])
-                 else float for x in fields]
+        dtype = [text if re.search(r'CHAR', x[2]) else float for x in fields]
     else:
-        dtype = ['category' if col != 'KEY_NIS' else float for col in names]
-    # must use floats, since int columns can't have missing values
-    # because it's okay because floats hardly use more space than ints
+        # keep KEY_NIS as numeric so it can be safely sorted on
+        dtype = [text if col != 'KEY_NIS' else float for col in names]
 
     # convert dtype list into dictionary (for pd.read_fwf)
     dtype = {name: dt for name, dt in zip(names, dtype)}
@@ -60,8 +63,8 @@ def read_hcup(data_file, sas_script, chunksize=500000, combine_chunks=True,
 
     # return meta-data if requested
     if return_meta:
-        return {'names': names, 'starts':starts, 'widths': widths,
-                'dtypes':dtype, 'na_values':na_vals}
+        return {'names': names, 'starts': starts, 'widths': widths,
+                'dtypes': dtype, 'na_values': na_vals}
 
     # get a generator that reads the data in chunks
     dat = pd.read_fwf(data_file, header=None, names=names, widths=widths,
@@ -92,6 +95,7 @@ def read_hcup(data_file, sas_script, chunksize=500000, combine_chunks=True,
     # recombine the chunks and return the result
     dat = pd.concat(dat)
     return dat
+
 
 def stack_chunks(dat):
     columns, dtypes = dat[0].columns, dat[0].dtypes
