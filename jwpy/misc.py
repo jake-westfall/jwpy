@@ -1,4 +1,5 @@
 import timeit
+import gc
 import numpy as np
 import pandas as pd
 from operator import xor
@@ -15,11 +16,13 @@ import os
 from jwpy.misc import Timer
 from jwpy.explore_funcs import summarize_df
 
-pd.set_option('display.max_columns', 250)
-pd.set_option('display.max_rows', 250)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.max_rows', 500)
 
-os.getcwd()
-# os.chdir()'''
+%load_ext autoreload
+%autoreload 2
+
+path = os.getcwd()'''
 
 
 class Timer:
@@ -43,12 +46,14 @@ class Timer:
         self.disable_gc = disable_gc
         self.verbose = verbose
         self.start = self.end = self.interval = None
+
     def __enter__(self):
         if self.disable_gc:
             self.gc_state = gc.isenabled()
             gc.disable()
         self.start = self.timer()
         return self
+
     def __exit__(self, *args):
         self.end = self.timer()
         if self.disable_gc and self.gc_state:
