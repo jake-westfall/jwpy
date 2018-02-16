@@ -107,7 +107,7 @@ def read_hcup(data_file, sas_script, chunksize=500000, combine_chunks=True,
     return dat
 
 
-def read_mhos(data_file, sas_script, chunksize=500000, combine_chunks=True,
+def read_mhos(sas_script, data_file=None, chunksize=500000, combine_chunks=True,
               return_meta=False, strings_to_categorical=True, **kwargs):
     '''
     Arguments:
@@ -126,9 +126,12 @@ def read_mhos(data_file, sas_script, chunksize=500000, combine_chunks=True,
     Returns:
         Default: a single pandas DataFrame
         If combine_chunks=False: Generator of pandas DataFrames
-        If return_meta=True: Return metadata (widths, dtypes, etc. ) *instead
+        If return_meta=True: Return metadata (colspecs, dtypes, etc. ) *instead
             of* the data
     '''
+    if data_file is None:
+        return_meta = True
+
     # what dtype to use for text columns
     text = 'category' if strings_to_categorical else 'object'
 
@@ -148,7 +151,7 @@ def read_mhos(data_file, sas_script, chunksize=500000, combine_chunks=True,
 
     # extract the meta-data
     prefix = [x.group(1) for x in fields]
-    names = [x.group(2) for x in fields]
+    names = [x.group(2).lower() for x in fields]
     dtypes = [str if x.group(2)=='CASE_ID' else text if x.group(3) else float
               for x in fields]
     starts = [int(x.group(4))-1 for x in fields]
@@ -168,7 +171,7 @@ def read_mhos(data_file, sas_script, chunksize=500000, combine_chunks=True,
     # return meta-data if requested
     if return_meta:
         return {'names': names, 'starts': starts, 'ends': ends,
-                'dtypes': dtype, 'descriptions': descriptions}
+                'dtypes': dtypes, 'descriptions': descriptions}
 
     # get a generator that reads the data in chunks
     dat = pd.read_fwf(data_file, header=None, names=names,

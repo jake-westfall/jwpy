@@ -100,3 +100,43 @@ def align_cols(df1, df2):
                 d[col] = d[col].cat.reorder_categories(levels[col])
 
     return p1, p2
+
+
+def hcup_datadict(col_names):
+    '''
+    For quickly, easily building data dictionaries for HCUP datasets.
+
+    Args:
+        col_names: List or pandas Index (e.g., from df.columns) giving the HCUP
+        variable names.
+
+    Returns:
+        A dict containing key:value pairs (name: url), where url is a string
+        giving the URL of the corresponding entry in HCUP's online data dict.
+    '''
+    # explicitly cast to list (in case it's a pandas Index object)
+    col_names = list(col_names)
+
+    # these hcup variables end in a digit but are not grouped variables
+    skips = ['ASOURCEUB92', 'DISCWT10', 'DISCWTcharge10', 'DISPUB04',
+             'DISPUB92', 'DRG10', 'DRG18', 'DRG24', 'DS_Stage1', 'MDC10',
+             'MDC18', 'MDC24', 'PAY1', 'PAY2', 'PL_NCHS2006', 'PL_UR_CAT4',
+             'PointOfOriginUB04', 'ZIPINC4', 'ZIPINC8']
+
+    # get the columns that are grouped
+    # iterate backwards through list so popping doesn't affect indexing
+    groups = []
+    for i in range(len(col_names))[::-1]:
+        if col_names[i] not in skips and re.search(r'\d$', col_names[i]):
+            groups.append(col_names.pop(i))
+
+    # replace trailing numbers with "n" and add unique groups back to list
+    unique_groups = set([re.search(r'(.*\D)\d+$', x).group(1) for x in groups])
+    col_names.extend([x+'n' for x in unique_groups])
+    col_names.sort()
+
+    # get the links and store as a dictionary
+    url = r'https://www.hcup-us.ahrq.gov/db/vars/{}/nisnote.jsp'
+    links = {x: url.format(x.lower()) for x in col_names}
+
+    return links

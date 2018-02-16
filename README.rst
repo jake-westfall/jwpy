@@ -28,13 +28,20 @@ Contains miscellaneous Python code useful to Jake Westfall (and maybe others).
 Functions
 --------
 
-* ``summarize_df()``: Quick summary of most important DataFrame info
-* ``Timer``: Class for printing the execution time of expressions (use with ``with`` statement)
-* ``header``: Constant (string) useful for filling in top of new Python scripts
-* ``aov_xtab()``: Exploratory function for examining crossing of two many-leveled factors
-* ``betabinom``: Class implementing likelihood function for beta-binomial model; can be plugged into ``statsmodels``
-* ``read_hcup()``: Reads in fixed-width text data files that are in the format used by HCUP
-* ``align_cols()``: Wrapper for pandas.DataFrame.align(..., axis=1) that prepares column dtypes for stacking
+* ``explore_funcs`` module
+  * ``summarize_df()``: Quick summary of most important DataFrame info
+  * ``aov_xtab()``: Exploratory function for examining crossing of two many-leveled factors
+* ``sas_fwf`` module
+  * ``read_hcup()``: Reads in fixed-width text data files that are in the format used by HCUP
+  * ``read_mhos()``: Reads in fixed-width text data files that are in the format used by MHOS
+  * ``stack_chunks()``: Concatenate DataFrames without upcasting categoricals to objects
+* ``betabinom`` module
+  * ``betabinom``: Class implementing likelihood function for beta-binomial model; can be plugged into ``statsmodels``
+* ``misc`` module
+  * ``Timer``: Class for printing the execution time of expressions (use with ``with`` statement)
+  * ``header``: Constant (string) useful for filling in top of new Python scripts
+  * ``align_cols()``: Wrapper for pandas.DataFrame.align(..., axis=1) that prepares column dtypes for stacking
+  * ``hcup_datadict()``: For quickly, easily building data dictionaries for HCUP datasets
 
 Installation
 ------------
